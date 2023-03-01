@@ -4,4 +4,3 @@ gsheetsdb
 gspread
 gspread_pandas
 plotly.express
-plotly.graph_objects
