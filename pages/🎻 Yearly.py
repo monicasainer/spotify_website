@@ -125,7 +125,7 @@ with st.expander("**Conclusions**"):
                 From a general perspective I listened to Podcasts for more minutes than to
                 songs (53,53% vs 46,47%).
 
-            -Week trend 📅 :
+            -Weekly trend 📅 :
 
                 The Spotify use diminished over the week. It is on Fridays where the general
                 level almost reaches Monday's driven by songs.
