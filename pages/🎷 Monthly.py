@@ -51,6 +51,11 @@ st.set_page_config(page_title="Monthly Data",
 
 st.markdown("# Monthly Data")
 st.sidebar.header("Monthly Data")
+st.write("")
+st.write("")
+st.write("--------------------------------------------------------------------------------")
+st.write("")
+st.write("")
 
 col1,col2 = st.columns(2)
 
@@ -99,3 +104,19 @@ with col2:
     with st.expander("See explanation"):
             st.write("""The length of each bar represents how many minutes have been played each month.""")
             st.write("""The color indicates which proportion corresponds to each type of audio.""")
+
+
+with st.expander("**Conclusions**"):
+    st.write("""
+            -Spotify in Summer ☀️ :
+
+                The listenings during July and August increased drastically compared to months as January.
+                There is not a special driver since both, minutes of pocasts listened and minutes of tracks grow.
+
+            -Tracks vs Podcasts 🥊 :
+
+                Although from a general perspective I listened to Podcasts for more minutes (yearly analysis),
+                during the first six months (January, February, March, April, June, and July)
+                I prefered songs.
+
+             """)

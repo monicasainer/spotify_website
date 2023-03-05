@@ -44,11 +44,17 @@ def load_the_spreadsheet(spreadsheetname):
 # Loading the data
 historical_data_df = load_the_spreadsheet('historical_data')
 classification_df = load_the_spreadsheet('classification')
-historical_data_dates_types_df = load_the_spreadsheet('historical_dates_types')
 historical_data_dates_track_types_df = load_the_spreadsheet('historical_dates_types_grouped')
 historical_data_dates_df = load_the_spreadsheet('historical_dates')
 number_of_artists_yearly = historical_data_df['artistName'].nunique()
 number_of_tracks_yearly = historical_data_df['trackName'].nunique()
+minutes_per_weekday_total = historical_data_dates_df.groupby(['weekday'],as_index=False).agg(minutes_played=('minutesPlayed','sum'))
+weekdays= {0:'Monday',1:'Tuesday',2:'Wednesday',3:'Thursday',4:'Friday',5:'Saturday',6:'Sunday'}
+minutes_per_weekday_total['weekday']=minutes_per_weekday_total['weekday'].map(weekdays)
+minutes_per_weekday_type = historical_data_dates_track_types_df.groupby(['typeObject','weekday'],as_index=False).agg(minutes_played=('listeningTracks','sum'))
+
+
+
 
 st.set_page_config(page_title="Yearly Data", page_icon="📈")
 
@@ -58,6 +64,11 @@ with open('style.css') as r:
 
 st.markdown("# Yearly Data")
 st.sidebar.header("Plotting Demo")
+st.write("")
+st.write("")
+st.write("--------------------------------------------------------------------------------")
+st.write("")
+st.write("")
 
 col1,col2= st.columns(2)
 
@@ -93,41 +104,33 @@ st.plotly_chart(fig,theme=None, use_container_width=True)
 
 
 
-# historical_data_dates_types_df['date']=pd.to_datetime(historical_data_dates_types_df['date'])
-# historical_data_dates_df['date']==pd.to_datetime(historical_data_dates_types_df['date'])
+fig = go.Figure(data=[
+    go.Bar(name='Total', x=minutes_per_weekday_total['weekday'], y=minutes_per_weekday_total['minutes_played'],marker=dict(
+            color='rgba(89, 84, 84, 0.6)'
+        )),
+    go.Bar(name='Tracks', x=minutes_per_weekday_total['weekday'], y=minutes_per_weekday_type[minutes_per_weekday_type['typeObject']=='Track']['minutes_played'],marker=dict(
+            color='crimson'
+        )),
+    go.Bar(name='Podcasts', x=minutes_per_weekday_total['weekday'], y=minutes_per_weekday_type[minutes_per_weekday_type['typeObject']=='Podcast']['minutes_played'],marker=dict(
+            color='rgba(3, 3, 3, 0.6)'))])
+fig.update_layout(title_text='Minutes listened per weekday')
+st.plotly_chart(fig,theme=None, use_container_width=True)
 
-def interactive_plot(df1,df2):
-    plot=go.Figure()
-    plot.add_trace(go.Scatter(x=df1['date'],y=df1['totalTime'],name ='Total', line={'color':'skyblue', 'width':2}))
-    plot.add_trace(go.Scatter(x=df2['date'],y=df2[df2['typeObject']=='Track']['listeningTracks'],name ='Track', line={'color':'red', 'width':2}))
-    plot.add_trace(go.Scatter(x=df2['date'],y=df2[df2['typeObject']=='Podcast']['listeningTracks'],name ='Podcast', line={'color':'white', 'width':2}))
-    plot.update_xaxes(
-            rangeslider_visible=False,
-            rangeselector={
-                'buttons':list([
-                    {'count':1, 'label':"1m", 'step':"month", 'stepmode':"backward"},
-                    {'count':6, 'label':"6m", 'step':"month", 'stepmode':"backward"},
-                    {'count':1, 'label':"1y", 'step':"year", 'stepmode':"backward"},
-                    {'step':"all"}
-                ])
-            },
-            rangeselector_font_color='#faf8f7',
-            showgrid=False
-            )
-    plot.update_layout(legend={'orientation': "h", 'yanchor':"bottom",
-                                    'y':-0.2,'xanchor':"left", 'x':0,'title':None},
-                        xaxis_title= None,
-                        yaxis_title= None,
-                        plot_bgcolor = 'rgba(0, 0, 0, 0)',
-                        paper_bgcolor = 'rgba(0, 0, 0, 0)',
-                        margin ={'t':50,'l':50,'b':50,'r':0.1},
-                        autosize=False,
-                        width=1000,
-                        height=600
-                            )
-    plot.update_yaxes(exponentformat='none',
-                        gridwidth=1,
-                        gridcolor='#808080')
-    return plot
-plot = interactive_plot(historical_data_dates_df,historical_data_dates_track_types_df)
-st.plotly_chart(plot, x='Time spend',y='time')
+
+with st.expander("**Conclusions**"):
+    st.write("""
+
+            -Tracks vs Podcasts 🥊 :
+
+                From a general perspective I listened to Podcasts for more minutes than to
+                songs (53,53% vs 46,47%).
+
+            -Week trend 📅 :
+
+                The Spotify use diminished over the week. It is on Fridays where the general
+                level almost reaches Monday's driven by songs.
+
+                Saturday is the day where I listened to more music, while Sundays are for
+                podcasts mainly .
+
+             """)

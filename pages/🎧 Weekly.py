@@ -51,6 +51,12 @@ st.set_page_config(page_title="Weekly Data",
 st.markdown("# Weekly Data")
 st.sidebar.header("Weekly Data")
 
+st.write("")
+st.write("")
+st.write("--------------------------------------------------------------------------------")
+st.write("")
+st.write("")
+
 with st.expander("See explanation"):
         st.write("""This is a polar chart.""")
         st.write("""The length of the radial shows how many minutes of audio I played per week,
@@ -69,3 +75,28 @@ labels={"nrArtists": "Number artists"})
 fig.update_polars(angularaxis_autotypenumbers="strict")
 fig.update_layout(title = 'Number of artists per week')
 st.plotly_chart(fig,theme=None, use_container_width=False)
+
+
+
+with st.expander("**Conclusions**"):
+    st.write("""
+            -I follow an irregular path 🤪:
+
+                Even though I listened to 125 artists per week in average, the data can change drastically
+                from one week to another.
+                This irregular pattern can be applied to the number of minutes listened too.
+
+            -I started the year with variety 🔁 :
+
+                In spite of lower levels of minutes played compared to the central and ending weeks of the year,
+                I kept exploring different artists.
+                However, at the end of the year I prefered to listened to either the same tracks or
+                the same artists' songs.
+
+            -Gradual increase and decrease 🚀:
+
+                It seems that the number of minutes listened increase gradually during the first weeks,
+                to reach the maximum during the central weeks of the year.
+                However, the graphs in the section Monthly will clarify this assumption.
+
+             """)
