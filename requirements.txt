@@ -4,3 +4,4 @@ gsheetsdb
 gspread
 gspread_pandas
 plotly.express
+pathlib
